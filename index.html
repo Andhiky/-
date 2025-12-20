@@ -244,11 +244,55 @@
             max-width: 400px;
             margin-left: auto;
             margin-right: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .music-notice:hover {
+            background-color: rgba(255, 182, 193, 0.5);
+            transform: scale(1.05);
         }
         
         .music-notice i {
+            font-size: 1.5rem;
             color: #ff1493;
-            margin-right: 8px;
+        }
+        
+        .music-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .music-btn {
+            background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 20, 147, 0.3);
+        }
+        
+        .music-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(255, 20, 147, 0.4);
+        }
+        
+        .music-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
         
         /* Letter Page */
@@ -702,96 +746,6 @@
         .popup-next {
             right: -25px;
         }
-
-        /* Musik indicator */
-        .music-indicator {
-            position: fixed;
-            top: 25px;
-            right: 25px;
-            background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            z-index: 1000;
-            cursor: pointer;
-            box-shadow: 0 6px 15px rgba(255, 20, 147, 0.4);
-            transition: all 0.3s ease;
-            opacity: 0;
-            transform: scale(0);
-            border: 3px solid white;
-        }
-
-        .music-indicator.active {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        .music-indicator:hover {
-            transform: scale(1.15);
-            box-shadow: 0 8px 20px rgba(255, 20, 147, 0.6);
-        }
-
-        .music-indicator.paused {
-            background: linear-gradient(135deg, #d2691e 0%, #8b4513 100%);
-        }
-
-        .music-indicator.paused i {
-            opacity: 0.8;
-        }
-        
-        /* Alert Styles */
-        .music-alert {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, #ffe4e9 0%, #fff0f5 100%);
-            padding: 25px;
-            border-radius: 20px;
-            border: 4px solid #ff69b4;
-            z-index: 2000;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.4);
-            max-width: 350px;
-            width: 90%;
-            font-family: 'Comic Neue', cursive;
-            animation: popupFadeIn 0.5s ease;
-        }
-        
-        .success-message {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 15px;
-            z-index: 2000;
-            font-family: 'Comic Neue', cursive;
-            font-weight: bold;
-            font-size: 1.1rem;
-            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
-            border: 3px solid white;
-            opacity: 0;
-            animation: slideDown 0.5s ease forwards;
-        }
-        
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -20px);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, 0);
-            }
-        }
         
         /* Responsive */
         @media (max-width: 768px) {
@@ -838,14 +792,6 @@
             
             .popup-next {
                 right: 10px;
-            }
-
-            .music-indicator {
-                top: 15px;
-                right: 15px;
-                width: 50px;
-                height: 50px;
-                font-size: 1.5rem;
             }
         }
         
@@ -897,11 +843,13 @@
     </style>
 </head>
 <body>
-    <!-- Indicator musik -->
-    <div class="music-indicator" id="musicIndicator">
-        <i class="fas fa-music"></i>
-    </div>
-
+    <!-- Audio Player -->
+    <audio id="backgroundMusic" loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-to-you-443.mp3" type="audio/mpeg">
+        <source src="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-to-you-443.wav" type="audio/wav">
+        Browser Anda tidak mendukung elemen audio.
+    </audio>
+    
     <!-- Popup Foto -->
     <div class="photo-popup" id="photoPopup">
         <div class="popup-content">
@@ -950,8 +898,7 @@
                 </div>
                 <div class="letter-back">
                     <p style="color: #ff1493; font-size: 1.3rem; text-align: center; font-family: 'Comic Neue', cursive;">
-                        <i class="fas fa-music" style="margin-right: 10px;"></i>
-                        🎵 Musik cinta dimulai... 🎵
+                        💖 Surat terbuka! 💖
                     </p>
                 </div>
             </div>
@@ -960,10 +907,25 @@
                 ✨ Klik untuk membuka! ✨
             </div>
             
-            <div class="music-notice">
-                <p style="color: #ff1493; font-size: 1.1rem; font-family: 'Comic Neue', cursive;">
-                    <i class="fas fa-music"></i> Musik romantis akan dimulai saat kamu membuka surat ini
-                </p>
+            <!-- Kontrol Musik -->
+            <div class="music-notice" id="musicNotice">
+                <i class="fas fa-music"></i>
+                <span>Musik akan diputar saat surat dibuka</span>
+            </div>
+            
+            <div class="music-controls" id="musicControls" style="display: none;">
+                <button class="music-btn" id="playMusicBtn" title="Putar Musik">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button class="music-btn" id="pauseMusicBtn" title="Jeda Musik" disabled>
+                    <i class="fas fa-pause"></i>
+                </button>
+                <button class="music-btn" id="stopMusicBtn" title="Stop Musik" disabled>
+                    <i class="fas fa-stop"></i>
+                </button>
+                <span style="color: #ff1493; font-size: 1rem; margin-left: 10px;">
+                    <i class="fas fa-volume-up"></i>
+                </span>
             </div>
         </div>
         
@@ -1027,15 +989,9 @@
         <!-- Footer -->
         <div class="footer">
             <p>Dibuat dengan <span class="heart">❤</span> khusus untuk ulang tahunmu | Scrapbook Digital Cinta 💌</p>
-            <p style="margin-top: 15px; color: #ff69b4;">© 2023 - Selamanya dan selamanya 💕</p>
+                <p style="margin-top: 15px; color: #ff69b4;">© 2023 - Selamanya dan selamanya 💕</p>
         </div>
     </div>
-
-    <!-- Audio untuk musik background -->
-    <audio id="backgroundMusic" loop preload="auto">
-        <source src="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-to-you-443.mp3" type="audio/mpeg">
-        Browser Anda tidak mendukung elemen audio.
-    </audio>
 
     <script>
         // Data untuk website
@@ -1066,20 +1022,18 @@ Selamat ulang tahun, sayangku! 🥳💝`;
             { src: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", caption: "💕 Momen Bahagia Bersama 💕" },
             { src: "https://images.unsplash.com/photo-1511988617509-a57c8a288659?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", caption: "🌄 Petualangan Kita yang Seru 🌄" },
             { src: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", caption: "😊 Senyum Manismu yang Menawan 😊" },
-            { src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", caption: "💖 Kenangan Indah Bersama 💖" },
+                        { src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", caption: "💖 Kenangan Indah Bersama 💖" },
             { src: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", caption: "✨ Cahaya Hidupku yang Terang ✨" },
             { src: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80", caption: "💑 Bersama Selamanya 💑" }
         ];
 
         // Variabel global
         let currentPhotoIndex = 0;
-        let isMusicPlaying = false;
         let letterOpened = false;
         let typingInterval;
+        let musicPlaying = false;
         
         // Elemen DOM
-        const backgroundMusic = document.getElementById('backgroundMusic');
-        const musicIndicator = document.getElementById('musicIndicator');
         const closedLetter = document.getElementById('closedLetter');
         const floatingHearts = document.getElementById('floatingHearts');
         const photoPopup = document.getElementById('photoPopup');
@@ -1088,6 +1042,12 @@ Selamat ulang tahun, sayangku! 🥳💝`;
         const closePopup = document.getElementById('closePopup');
         const prevPhotoBtn = document.getElementById('prevPhoto');
         const nextPhotoBtn = document.getElementById('nextPhoto');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const musicNotice = document.getElementById('musicNotice');
+        const musicControls = document.getElementById('musicControls');
+        const playMusicBtn = document.getElementById('playMusicBtn');
+        const pauseMusicBtn = document.getElementById('pauseMusicBtn');
+        const stopMusicBtn = document.getElementById('stopMusicBtn');
 
         // Fungsi untuk membuat floating hearts
         function createFloatingHearts() {
@@ -1207,9 +1167,115 @@ Selamat ulang tahun, sayangku! 🥳💝`;
             }
         }
 
+        // Fungsi untuk mengatur musik
+        function setupMusicControls() {
+            playMusicBtn.addEventListener('click', function() {
+                backgroundMusic.play();
+                musicPlaying = true;
+                updateMusicButtons();
+                createMusicVisualization();
+            });
+            
+            pauseMusicBtn.addEventListener('click', function() {
+                backgroundMusic.pause();
+                musicPlaying = false;
+                updateMusicButtons();
+            });
+            
+            stopMusicBtn.addEventListener('click', function() {
+                backgroundMusic.pause();
+                backgroundMusic.currentTime = 0;
+                musicPlaying = false;
+                updateMusicButtons();
+            });
+            
+            backgroundMusic.addEventListener('ended', function() {
+                musicPlaying = false;
+                updateMusicButtons();
+            });
+            
+            musicNotice.addEventListener('click', function() {
+                backgroundMusic.play();
+                musicPlaying = true;
+                musicControls.style.display = 'flex';
+                this.style.display = 'none';
+                updateMusicButtons();
+                createMusicVisualization();
+            });
+        }
+        
+        // Fungsi untuk update tampilan tombol musik
+        function updateMusicButtons() {
+            playMusicBtn.disabled = musicPlaying;
+            pauseMusicBtn.disabled = !musicPlaying;
+            stopMusicBtn.disabled = !musicPlaying;
+        }
+
+        // Fungsi untuk visualisasi musik sederhana
+        function createMusicVisualization() {
+            const heartsContainer = document.createElement('div');
+            heartsContainer.id = 'musicVisualization';
+            heartsContainer.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 1000;
+                pointer-events: none;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            `;
+            document.body.appendChild(heartsContainer);
+            
+            function createMusicHeart() {
+                if (!musicPlaying) return;
+                
+                const heart = document.createElement('div');
+                heart.innerHTML = '💖';
+                heart.style.cssText = `
+                    font-size: ${Math.random() * 20 + 15}px;
+                    opacity: ${Math.random() * 0.7 + 0.3};
+                    transform: translateY(0);
+                    transition: transform 1s ease-out, opacity 1s ease-out;
+                `;
+                heartsContainer.appendChild(heart);
+                
+                setTimeout(() => {
+                    heart.style.transform = 'translateY(-30px)';
+                    heart.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        if (heart.parentNode) {
+                            heart.remove();
+                        }
+                    }, 1000);
+                }, 10);
+            }
+            
+            const musicInterval = setInterval(createMusicHeart, 500);
+            
+            backgroundMusic.addEventListener('pause', () => {
+                clearInterval(musicInterval);
+                if (heartsContainer.parentNode) {
+                    setTimeout(() => {
+                        heartsContainer.remove();
+                    }, 1000);
+                }
+            });
+            
+            backgroundMusic.addEventListener('ended', () => {
+                clearInterval(musicInterval);
+                if (heartsContainer.parentNode) {
+                    setTimeout(() => {
+                        heartsContainer.remove();
+                    }, 1000);
+                }
+            });
+        }
+
         // Fungsi untuk membuka surat
         function setupLetterOpening() {
-            closedLetter.addEventListener('click', async function() {
+            closedLetter.addEventListener('click', function() {
                 if (letterOpened) return;
                 
                 letterOpened = true;
@@ -1231,8 +1297,19 @@ Selamat ulang tahun, sayangku! 🥳💝`;
                     letterBack.style.display = 'flex';
                 }, 600);
                 
-                // Mulai musik
-                await startBackgroundMusic();
+                // Putar musik saat surat terbuka
+                setTimeout(() => {
+                    backgroundMusic.play().then(() => {
+                        musicPlaying = true;
+                        musicControls.style.display = 'flex';
+                        musicNotice.style.display = 'none';
+                        updateMusicButtons();
+                        createMusicVisualization();
+                    }).catch(error => {
+                        console.log("Autoplay diblokir. Pengguna harus berinteraksi terlebih dahulu.");
+                        musicNotice.style.display = 'flex';
+                    });
+                }, 800);
                 
                 // Tampilkan halaman surat
                 setTimeout(() => {
@@ -1252,227 +1329,6 @@ Selamat ulang tahun, sayangku! 🥳💝`;
                     instructions.style.transition = 'all 0.5s ease';
                 }, 1500);
             });
-        }
-
-        // Fungsi untuk memulai musik latar
-        async function startBackgroundMusic() {
-            if (isMusicPlaying) return;
-            
-            try {
-                backgroundMusic.volume = 0.3;
-                
-                // User sudah melakukan klik, jadi seharusnya bisa memutar musik
-                await backgroundMusic.play();
-                isMusicPlaying = true;
-                updateMusicIndicator();
-                
-                // Tampilkan indicator musik
-                setTimeout(() => {
-                    musicIndicator.classList.add('active');
-                }, 1000);
-                
-                console.log("Musik berhasil dimulai!");
-                
-            } catch (error) {
-                console.log("Gagal memutar musik:", error);
-                
-                // Tampilkan pesan untuk pengguna
-                showMusicPrompt();
-            }
-        }
-
-        // Fungsi untuk prompt musik
-        function showMusicPrompt() {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = 'music-alert';
-            
-            alertDiv.innerHTML = `
-                <h3 style="color: #ff1493; margin-bottom: 15px; font-size: 1.8rem;">🎵 Musik Romantis 🎵</h3>
-                <p style="color: #8b4513; margin-bottom: 20px; line-height: 1.6; font-size: 1.2rem;">
-                    Klik tombol di bawah untuk memutar musik romantis!
-                </p>
-                <div style="display: flex; gap: 15px; justify-content: center;">
-                    <button id="allowMusicBtn" style="
-                        background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
-                        color: white;
-                        border: none;
-                        padding: 12px 25px;
-                        border-radius: 50px;
-                        cursor: pointer;
-                        font-family: 'Comic Neue', cursive;
-                        font-weight: bold;
-                        font-size: 1.1rem;
-                        transition: all 0.3s ease;
-                        box-shadow: 0 5px 15px rgba(255, 20, 147, 0.4);
-                    ">
-                        <i class="fas fa-check"></i> Putar Musik
-                    </button>
-                    <button id="skipMusicBtn" style="
-                        background: linear-gradient(135deg, #d2691e 0%, #8b4513 100%);
-                        color: white;
-                        border: none;
-                        padding: 12px 25px;
-                        border-radius: 50px;
-                        cursor: pointer;
-                        font-family: 'Comic Neue', cursive;
-                        font-weight: bold;
-                        font-size: 1.1rem;
-                        transition: all 0.3s ease;
-                        box-shadow: 0 5px 15px rgba(139, 69, 19, 0.4);
-                    ">
-                        <i class="fas fa-forward"></i> Lewati
-                    </button>
-                </div>
-            `;
-            
-            document.body.appendChild(alertDiv);
-            
-            // Tombol izinkan musik
-            document.getElementById('allowMusicBtn').addEventListener('click', async function() {
-                try {
-                    await backgroundMusic.play();
-                    isMusicPlaying = true;
-                    updateMusicIndicator();
-                    musicIndicator.classList.add('active');
-                    
-                    showSuccessMessage("Musik telah dimulai! 🎶");
-                    
-                    alertDiv.style.opacity = '0';
-                    alertDiv.style.transform = 'translate(-50%, -50%) scale(0.8)';
-                    setTimeout(() => alertDiv.remove(), 300);
-                    
-                } catch (error) {
-                    showAlternativeMusicSolution();
-                }
-            });
-            
-            // Tombol lewati musik
-            document.getElementById('skipMusicBtn').addEventListener('click', function() {
-                alertDiv.style.opacity = '0';
-                alertDiv.style.transform = 'translate(-50%, -50%) scale(0.8)';
-                setTimeout(() => alertDiv.remove(), 300);
-                
-                showSkipMessage();
-            });
-            
-            // Auto close setelah 15 detik
-            setTimeout(() => {
-                if (alertDiv.parentNode) {
-                    alertDiv.style.opacity = '0';
-                    alertDiv.style.transform = 'translate(-50%, -50%) scale(0.8)';
-                    setTimeout(() => alertDiv.remove(), 300);
-                }
-            }, 15000);
-        }
-
-        // Fungsi untuk menampilkan pesan sukses
-        function showSuccessMessage(message) {
-            const successDiv = document.createElement('div');
-            successDiv.className = 'success-message';
-            successDiv.innerHTML = `<i class="fas fa-music"></i> ${message}`;
-            document.body.appendChild(successDiv);
-            
-            setTimeout(() => {
-                successDiv.style.opacity = '0';
-                setTimeout(() => successDiv.remove(), 500);
-            }, 3000);
-        }
-
-        // Fungsi untuk menampilkan pesan skip
-        function showSkipMessage() {
-            const skipDiv = document.createElement('div');
-            skipDiv.className = 'success-message';
-            skipDiv.style.background = 'linear-gradient(135deg, #ff9800 0%, #f57c00 100%)';
-            skipDiv.innerHTML = `<i class="fas fa-forward"></i> Musik dilewati. Klik ikon musik di pojok kanan atas untuk memutar nanti!`;
-            document.body.appendChild(skipDiv);
-            
-            setTimeout(() => {
-                skipDiv.style.opacity = '0';
-                setTimeout(() => skipDiv.remove(), 500);
-            }, 4000);
-        }
-
-        // Fungsi untuk mengupdate indicator musik
-        function updateMusicIndicator() {
-            if (backgroundMusic.paused) {
-                musicIndicator.classList.add('paused');
-                musicIndicator.innerHTML = '<i class="fas fa-play"></i>';
-            } else {
-                musicIndicator.classList.remove('paused');
-                musicIndicator.innerHTML = '<i class="fas fa-music"></i>';
-            }
-        }
-
-        // Fungsi untuk mengatur kontrol musik
-        function setupMusicControls() {
-            // Toggle play/pause
-            musicIndicator.addEventListener('click', function() {
-                if (backgroundMusic.paused) {
-                    backgroundMusic.play();
-                    isMusicPlaying = true;
-                } else {
-                    backgroundMusic.pause();
-                    isMusicPlaying = false;
-                }
-                updateMusicIndicator();
-            });
-            
-            // Update indicator
-            backgroundMusic.addEventListener('play', () => {
-                isMusicPlaying = true;
-                updateMusicIndicator();
-            });
-            
-            backgroundMusic.addEventListener('pause', () => {
-                isMusicPlaying = false;
-                updateMusicIndicator();
-            });
-            
-            // Kontrol volume dengan scroll
-            musicIndicator.addEventListener('wheel', function(e) {
-                e.preventDefault();
-                const delta = e.deltaY > 0 ? -0.1 : 0.1;
-                backgroundMusic.volume = Math.max(0.1, Math.min(1, backgroundMusic.volume + delta));
-                
-                showVolumeChange(backgroundMusic.volume);
-            });
-            
-            // Coba lanjutkan musik saat kembali ke tab
-            document.addEventListener('visibilitychange', () => {
-                if (!document.hidden && isMusicPlaying && backgroundMusic.paused) {
-                    backgroundMusic.play().catch(e => console.log("Tidak bisa resume musik:", e));
-                }
-            });
-        }
-
-        // Fungsi untuk menampilkan perubahan volume
-        function showVolumeChange(volume) {
-            const volumeDiv = document.createElement('div');
-            volumeDiv.style.cssText = `
-                position: fixed;
-                top: 90px;
-                right: 20px;
-                background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
-                color: white;
-                padding: 12px 18px;
-                border-radius: 10px;
-                z-index: 2000;
-                font-family: 'Comic Neue', cursive;
-                font-weight: bold;
-                transition: all 0.3s ease;
-                box-shadow: 0 5px 15px rgba(255, 20, 147, 0.4);
-                border: 2px solid white;
-            `;
-            
-            const emoji = volume > 0.7 ? '🔊' : volume > 0.3 ? '🔉' : '🔈';
-            volumeDiv.innerHTML = `${emoji} Volume: ${Math.round(volume * 100)}%`;
-            document.body.appendChild(volumeDiv);
-            
-            setTimeout(() => {
-                volumeDiv.style.opacity = '0';
-                volumeDiv.style.transform = 'translateY(-10px)';
-                setTimeout(() => volumeDiv.remove(), 300);
-            }, 1500);
         }
 
         // Fungsi untuk popup foto
@@ -1542,8 +1398,11 @@ Selamat ulang tahun, sayangku! 🥳💝`;
         document.addEventListener('DOMContentLoaded', function() {
             createGallery();
             setupLetterOpening();
-            setupMusicControls();
             setupPhotoPopup();
+            setupMusicControls();
+            
+            // Preload musik untuk menghindari lag
+            backgroundMusic.load();
             
             // Efek hover untuk foto
             document.querySelectorAll('.photo-frame').forEach(frame => {
@@ -1578,9 +1437,6 @@ Selamat ulang tahun, sayangku! 🥳💝`;
             setTimeout(() => {
                 showWelcomeMessage();
             }, 800);
-            
-            // Preload musik
-            backgroundMusic.load();
         });
 
         // Fungsi untuk efek konfeti sederhana
@@ -1646,7 +1502,10 @@ Selamat ulang tahun, sayangku! 🥳💝`;
                    widihhhhh udahhh ulangg tahunn yang ke 17 nihh 💝
                 </p>
                 <p style="color: #ff69b4; margin-bottom: 25px; font-style: italic; font-size: 1.2rem;">
-                    ✨ <strong>Klik surat cinta di atas</strong> untuk membuka pesan spesial dan memulai musik latar romantis! ✨
+                    ✨ <strong>Klik surat cinta di atas</strong> untuk membuka pesan spesial! ✨
+                </p>
+                <p style="color: #d2691e; margin-bottom: 20px; font-size: 1rem;">
+                    🎵 Musik akan diputar otomatis saat surat dibuka 🎵
                 </p>
                 <button id="closeWelcomeBtn" style="
                     background: linear-gradient(135deg, #ff1493 0%, #ff69b4 100%);
@@ -1697,64 +1556,14 @@ Selamat ulang tahun, sayangku! 🥳💝`;
             }, 15000);
         }
 
-        // Fungsi alternatif jika musik tetap gagal
-        function showAlternativeMusicSolution() {
-            const altDiv = document.createElement('div');
-            altDiv.className = 'music-alert';
-            altDiv.style.background = 'linear-gradient(135deg, #ff9800 0%, #f57c00 100%)';
-            altDiv.style.borderColor = 'white';
-            
-            altDiv.innerHTML = `
-                <h3 style="margin-bottom: 15px; font-size: 1.8rem;">🎵 Alternatif Musik 🎵</h3>
-                <p style="margin-bottom: 15px; line-height: 1.6; font-size: 1.2rem;">
-                    Coba langkah berikut:
-                </p>
-                <ol style="text-align: left; margin-bottom: 20px; padding-left: 20px; color: white;">
-                    <li style="margin-bottom: 8px;">Refresh halaman lalu klik surat lagi</li>
-                    <li style="margin-bottom: 8px;">Klik ikon musik <i class="fas fa-music"></i> di pojok kanan atas</li>
-                </ol>
-                <button onclick="location.reload()" style="
-                    background: white;
-                    color: #ff9800;
-                    border: none;
-                    padding: 12px 25px;
-                    border-radius: 50px;
-                    cursor: pointer;
-                    font-family: 'Comic Neue', cursive;
-                    font-weight: bold;
-                    font-size: 1.1rem;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.4);
-                    margin: 5px;
-                ">
-                    <i class="fas fa-redo"></i> Refresh Halaman
-                </button>
-                <button onclick="this.parentElement.remove()" style="
-                    background: transparent;
-                    color: white;
-                    border: 2px solid white;
-                    padding: 12px 25px;
-                    border-radius: 50px;
-                    cursor: pointer;
-                    font-family: 'Comic Neue', cursive;
-                    font-weight: bold;
-                    font-size: 1.1rem;
-                    transition: all 0.3s ease;
-                    margin: 5px;
-                ">
-                    <i class="fas fa-times"></i> Tutup
-                </button>
-            `;
-            
-            document.body.appendChild(altDiv);
-        }
-
         // Cleanup saat halaman ditutup
         window.addEventListener('beforeunload', function() {
             if (typingInterval) {
                 clearTimeout(typingInterval);
             }
-            backgroundMusic.pause();
+            if (backgroundMusic) {
+                backgroundMusic.pause();
+            }
         });
 
         // Fallback untuk gambar yang gagal dimuat
